@@ -1,0 +1,41 @@
+# compose.yaml
+services:
+  database:
+    image: mariadb:latest
+    restart: always
+    networks:
+      - backend
+    environment:
+      MARIADB_ROOT_PASSWORD: "pokPOK123"
+      MARIADB_USER: "mehrab"
+      MARIADB_PASSWORD: "pokPOK123"
+      MARIADB_DATABASE: "heart_nest"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./db/db.sql:/docker-entrypoint-initdb.d/db.sql"
+
+  lucee:
+    image: heart_nest
+    build: .
+    restart: always
+    networks:
+      - backend
+    environment:
+      LUCEE_ADMIN_PASSWORD: "admin"
+    volumes:
+      - .:/var/www
+    ports:
+      - "8888:8888"
+      - "8850:8850"
+    depends_on:
+      - database
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  backend:
+    driver: bridge
