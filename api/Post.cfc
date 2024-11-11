@@ -37,5 +37,33 @@ component restpath="/posts" rest="true" {
 
         return posts;
     }
+
+
+     /**
+     * Create a new post for the authenticated user
+     */
+    remote any function createPost() httpmethod="POST" restpath="" {
+        var userId = utils.getUserContext();
+        if (!isNumeric(userId)){
+            cfheader(statusCode="401", statusText="Unauthorized");
+            return {"error" = "Invalid or expired token"};
+        }
+
+        var requestData = getHttpRequestData();
+        var newPost = deserializeJSON(requestData.content);
+
+        var sql = "
+            INSERT INTO heart_nest.Posts (user_id, content) 
+            VALUES (?, ?)";
+        queryExecute(sql, [
+            userId, 
+            newPost.content, 
+        ], {dataSource = variables.dataSource});
+        
+        cfheader(statusCode="201", statusText="Created");
+        var response = structNew("ordered");
+        response["message"] = "Post created successfully";
+        return response;
+    }
 }
 

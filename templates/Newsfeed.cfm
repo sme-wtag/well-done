@@ -1,35 +1,61 @@
 <main class="ml-80 flex-1 py-8 px-4">
     <!-- Create Post -->
-    <!-- Goal Selection -->
     <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
         <div class="flex gap-4">
             <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                <img id="userProfilePic" class="rounded-full" alt="Profile Picture of user" />
+                <img id="createPostUserPic" class="rounded-full" alt="Profile Picture" />
             </div>
             
-            <div class="flex-1 flex items-center gap-3">
-                <select id="goalSelect" class="flex-1 bg-gray-50 rounded-lg px-4 py-2 text-sm focus:outline-none border-gray-200 border">
-                    <option value="">Select a goal to complete...</option>
-                </select>
+            <div class="flex-1">
+                <textarea 
+                id="postContent" 
+                rows="3" 
+                class="w-full bg-gray-50 rounded-lg px-4 py-2 text-sm focus:outline-none border-gray-200 border mb-3" 
+                placeholder="Share your thoughts..."
+                ></textarea>
                 
-                <button 
-                    onclick="completeGoal()" 
+                <div class="flex justify-end">
+                    <button 
+                    onclick="createPost()" 
                     class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    id="completeButton"
-                    disabled
-                >
-                    Mark Complete
+                    id="postButton"
+                    >
+                    Post
                 </button>
             </div>
         </div>
     </div>
-
-    <!-- Feed Items -->
-    <div id="postsContainer" class="space-y-6">
-        <!-- Posts will be dynamically inserted here -->
+</div>
+<!-- Goal Selection (Might Move To Goals Management) -->
+<div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+    <div class="flex gap-4">
+        <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+            <img id="userProfilePic" class="rounded-full" alt="Profile Picture of user" />
+        </div>
+        
+        <div class="flex-1 flex items-center gap-3">
+            <select id="goalSelect" class="flex-1 bg-gray-50 rounded-lg px-4 py-2 text-sm focus:outline-none border-gray-200 border">
+                <option value="">Select a goal to complete...</option>
+            </select>
+            
+            <button 
+            onclick="completeGoal()" 
+            class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            id="completeButton"
+            disabled
+            >
+            Mark Complete
+        </button>
     </div>
+    </div>
+</div>
 
-    <script>
+<!-- Feed Items -->
+<div id="postsContainer" class="space-y-6">
+    <!-- Posts will be dynamically inserted here -->
+</div>
+
+<script>
         // Initialize state
         let goals = [];
         let posts = [];
@@ -215,5 +241,52 @@
                 document.getElementById('completeButton').disabled = !this.value;
             });
         });
+
+        // Create new post
+        async function createPost() {
+            const content = document.getElementById('postContent').value.trim();
+            if (!content) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('postContent').value = ''; // Clear textarea
+                    await fetchPosts(); // Refresh posts
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+            }
+        }
+
+        // Update the DOMContentLoaded event listener to include setting the create post user picture
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get user data from localStorage
+            const user = JSON.parse(localStorage.getItem('user')) || {};
+            setUserProfilePic(user.username);
+            
+            // Set create post user picture
+            document.getElementById('createPostUserPic').src = `https://api.dicebear.com/9.x/thumbs/svg?seed=${user.username}`;
+            
+            fetchGoals();
+            fetchPosts();
+
+            // Setup goal select event listener
+            document.getElementById('goalSelect').addEventListener('change', function() {
+                document.getElementById('completeButton').disabled = !this.value;
+            });
+
+            // Setup post content event listener
+            document.getElementById('postContent').addEventListener('input', function() {
+                document.getElementById('postButton').disabled = !this.value.trim();
+            });
+        });
+
     </script>
 </main>
