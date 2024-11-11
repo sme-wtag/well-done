@@ -28,14 +28,9 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message === "Signed out successfully") {
-                localStorage.removeItem('user');
-                localStorage.removeItem('user_id');
-                
-                window.location.href = '../index.cfm';
-            } else {
-                alert("Sign-out failed. Please try again.");
-            }
+            localStorage.removeItem('user');
+            localStorage.removeItem('user_id');
+            window.location.href = '../index.cfm';
         })
         .catch(error => console.error('Error:', error));
     });

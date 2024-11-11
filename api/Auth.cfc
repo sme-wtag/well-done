@@ -71,11 +71,11 @@ component restpath="/auth" rest="true" {
      */
     remote struct function signout() httpmethod="POST" restpath="sign-out" {
         var tokenDeleted = structDelete(session, "token", true);
-        if(tokenDeleted){
+        if (tokenDeleted) {
             cfheader(statuscode="200", statustext="Success");
             return {"message": "Signed out successfully"};
-        }else{
-            cfheader(statuscode="404", statustext="Not Found");
+        } else {
+            cfheader(statuscode="400", statustext="Bad Request");
             return {"message": "Not signed in"};
         }
     }
