@@ -69,7 +69,6 @@ component restpath="/users" rest="true" {
         return users;
     }
 
-    
 
    
 }
