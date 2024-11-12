@@ -7,7 +7,8 @@
         </div>
     </div>
 </main>
-<!--- 
+
+
 <script>
     // Load posts when page loads
     document.addEventListener('DOMContentLoaded', loadPosts);
@@ -25,72 +26,6 @@
                                 <div class="flex justify-between items-start mb-2">
                                     <div>
                                         <h3 class="text-lg font-bold text-gray-800">${post.username}</h3>
-                                        <p class="text-sm text-gray-500">${new Date(post.created_at).toLocaleString()}</p>
-                                    </div>
-                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-                                        ${post.post_type}
-                                    </span>
-                                </div>
-                                <p class="text-gray-600 mt-2">${post.content}</p>
-                            </div>
-                            <div class="pt-4 border-t border-gray-200">
-                                <button onclick="deletePost(${post.post_id})" 
-                                        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            })
-            .catch(error => {
-                console.error('Error loading posts:', error);
-                alert('Error loading posts');
-            });
-    }
-
-    // Delete post
-    function deletePost(postId) {
-        if (confirm("Are you sure you want to delete this post?")) {
-            fetch(`http://127.0.0.1:8888/rest/api/posts/${postId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Post deleted successfully!');
-                    loadPosts(); 
-                } else {
-                    alert('Error deleting post');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong!');
-            });
-        }
-    }
-</script> --->
-
-<script>
-    // Load posts when page loads
-    document.addEventListener('DOMContentLoaded', loadPosts);
-
-    function loadPosts() {
-        fetch('http://127.0.0.1:8888/rest/api/posts/user')
-            .then(response => response.json())
-            .then(posts => {
-                const container = document.getElementById('postsContainer');
-                container.innerHTML = posts.map(post => `
-                    <div class="flex bg-white border border-gray-200 rounded-lg shadow overflow-hidden transform transition-all hover:shadow-lg">
-                        <div class="w-5/6 p-6 space-y-4 flex flex-col justify-between">
-                            <div>
-                                <input type="hidden" name="post_id" value="${post.post_id}">
-                                <div class="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h3 class="text-lg font-bold text-gray-800">@${post.username}</h3>
                                         <p class="text-sm text-gray-500">${new Date(post.created_at).toLocaleString()}</p>
                                     </div>
                                     <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
