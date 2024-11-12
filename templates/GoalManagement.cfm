@@ -115,6 +115,7 @@
         });
     }
 
+    // Delete goal
     function deleteGoal(goalId) {
         if (confirm("Are you sure you want to delete this goal?")) {
             fetch(`http://127.0.0.1:8888/rest/api/goals/${goalId}`, {
@@ -137,4 +138,6 @@
             });
         }
     }
+
+
 </script>

@@ -224,11 +224,10 @@
     // Function to display users as cards
     function displayUsers(users) {
         var resultsDiv = document.getElementById("userResults");
-        resultsDiv.innerHTML = ""; 
+        resultsDiv.innerHTML = `<h2 class="text-xl font-semibold mb-4">Search Results</h2>`; 
 
         users.forEach(user => {
             var userCard = `
-                <h2 class="text-xl font-semibold mb-4">Search Results</h2>
                 <div class="flex bg-white border border-gray-200 rounded-lg shadow overflow-hidden transform transition-all hover:shadow-lg">
                     <!-- Left Side: Profile Image -->
                     <div class="w-1/3 bg-gray-100 flex items-center justify-center">
