@@ -1,5 +1,5 @@
 component restpath="/users" rest="true" {
-    variables.dataSource = application.dataSource;
+    variables.dataSource = "heart_nest";
     variables.utils = new utils.Utils();
 
     /**
