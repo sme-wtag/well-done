@@ -1,5 +1,5 @@
 component restpath="/auth" rest="true" {
-    variables.dataSource = application.dataSource;
+    variables.dataSource = "heart_nest";
 
     /**
      * Sign up a new user
